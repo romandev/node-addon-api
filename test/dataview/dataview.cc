@@ -32,6 +32,17 @@ static Value GetByteLength(const CallbackInfo& info) {
   return Number::New(info.Env(), info[0].As<DataView>().ByteLength());
 }
 
+static Value GetFloat32(const CallbackInfo& info) {
+  float byteOffset = info[1].As<Number>().Uint32Value();
+  return Number::New(info.Env(), info[0].As<DataView>().GetFloat32(byteOffset));
+}
+
+static void SetFloat32(const CallbackInfo& info) {
+  float byteOffset = info[1].As<Number>().Uint32Value();
+  float value = info[2].As<Number>().FloatValue();
+  info[0].As<DataView>().SetFloat32(byteOffset, value);
+}
+
 Object InitDataView(Env env) {
   Object exports = Object::New(env);
 
@@ -41,6 +52,9 @@ Object InitDataView(Env env) {
   exports["getArrayBuffer"] = Function::New(env, GetArrayBuffer);
   exports["getByteOffset"] = Function::New(env, GetByteOffset);
   exports["getByteLength"] = Function::New(env, GetByteLength);
+
+  exports["getFloat32"] = Function::New(env, GetFloat32);
+  exports["setFloat32"] = Function::New(env, SetFloat32);
 
   return exports;
 }

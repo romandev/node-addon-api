@@ -1177,13 +1177,13 @@ inline void ArrayBuffer::EnsureInfo() const {
 ////////////////////////////////////////////////////////////////////////////////
 inline DataView DataView::New(napi_env env,
                               Napi::ArrayBuffer arrayBuffer) {
-  return New(env, arrayBuffer, 0, 0);
+  return New(env, arrayBuffer, 0, arrayBuffer.ByteLength());
 }
 
 inline DataView DataView::New(napi_env env,
                               Napi::ArrayBuffer arrayBuffer,
                               size_t byteOffset) {
-  return New(env, arrayBuffer, byteOffset, 0);
+  return New(env, arrayBuffer, byteOffset, arrayBuffer.ByteLength());
 }
 
 inline DataView DataView::New(napi_env env,
@@ -1201,6 +1201,14 @@ inline DataView::DataView() : Object() {
 }
 
 inline DataView::DataView(napi_env env, napi_value value) : Object(env, value) {
+  napi_status status = napi_get_dataview_info(
+    _env,
+    _value       /* dataView */,
+    nullptr      /* byteLength */,
+    &_data       /* data */,
+    nullptr      /* arrayBuffer */,
+    nullptr      /* byteOffset */);
+  NAPI_THROW_IF_FAILED(_env, status);
 }
 
 inline Napi::ArrayBuffer DataView::ArrayBuffer() const {
@@ -1240,6 +1248,74 @@ inline size_t DataView::ByteLength() const {
     nullptr     /* byteOffset */);
   NAPI_THROW_IF_FAILED(_env, status, 0);
   return byteLength;
+}
+
+inline void* DataView::Data(size_t byteOffset) const {
+  return static_cast<uint8_t*>(_data) + byteOffset;
+}
+
+inline float DataView::GetFloat32(size_t byteOffset) const {
+  return *(static_cast<float*>(Data(byteOffset)));
+}
+
+inline double DataView::GetFloat64(size_t byteOffset) const {
+  return *(static_cast<double*>(Data(byteOffset)));
+}
+
+inline int8_t DataView::GetInt8(size_t byteOffset) const {
+  return *(static_cast<int8_t*>(Data(byteOffset)));
+}
+
+inline int16_t DataView::GetInt16(size_t byteOffset) const {
+  return *(static_cast<int16_t*>(Data(byteOffset)));
+}
+
+inline int32_t DataView::GetInt32(size_t byteOffset) const {
+  return *(static_cast<int32_t*>(Data(byteOffset)));
+}
+
+inline uint8_t DataView::GetUint8(size_t byteOffset) const {
+  return *(static_cast<uint8_t*>(Data(byteOffset)));
+}
+
+inline uint16_t DataView::GetUint16(size_t byteOffset) const {
+  return *(static_cast<uint16_t*>(Data(byteOffset)));
+}
+
+inline uint32_t DataView::GetUint32(size_t byteOffset) const {
+  return *(static_cast<uint32_t*>(Data(byteOffset)));
+}
+
+inline void DataView::SetFloat32(size_t byteOffset, float value) const {
+  *(static_cast<float*>(Data(byteOffset))) = value;
+}
+
+inline void DataView::SetFloat64(size_t byteOffset, double value) const {
+  *(static_cast<double*>(Data(byteOffset))) = value;
+}
+
+inline void DataView::SetInt8(size_t byteOffset, int8_t value) const {
+  *(static_cast<int8_t*>(Data(byteOffset))) = value;
+}
+
+inline void DataView::SetInt16(size_t byteOffset, int16_t value) const {
+  *(static_cast<int16_t*>(Data(byteOffset))) = value;
+}
+
+inline void DataView::SetInt32(size_t byteOffset, int32_t value) const {
+  *(static_cast<int32_t*>(Data(byteOffset))) = value;
+}
+
+inline void DataView::SetUint8(size_t byteOffset, uint8_t value) const {
+  *(static_cast<uint8_t*>(Data(byteOffset))) = value;
+}
+
+inline void DataView::SetUint16(size_t byteOffset, uint16_t value) const {
+  *(static_cast<uint16_t*>(Data(byteOffset))) = value;
+}
+
+inline void DataView::SetUint32(size_t byteOffset, uint32_t value) const {
+  *(static_cast<uint32_t*>(Data(byteOffset))) = value;
 }
 #endif
 
