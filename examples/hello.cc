@@ -1,14 +1,5 @@
-#include <napi.h>
+#include "hello.h"
 
-Napi::String Method(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  return Napi::String::New(env, "world");
+std::string Hello::getWorld() const {
+  return "world";
 }
-
-Napi::Object Init(Napi::Env env, Napi::Object exports) {
-  exports.Set(Napi::String::New(env, "hello"),
-              Napi::Function::New(env, Method));
-  return exports;
-}
-
-NODE_API_MODULE(hello, Init)
