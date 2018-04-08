@@ -1,0 +1,30 @@
+#ifndef EXAMPLES_HELLO_NIDL_H_
+#define EXAMPLES_HELLO_NIDL_H_
+
+#include <memory>
+#include <napi.h>
+
+#include "../<%= data.name.toLowerCase() %>.h"
+
+#include <generator/types/js_type_traits.h>
+#include <generator/types/native_type_traits.h>
+
+class NIDL_<%= data.name %> : public Napi::ObjectWrap<NIDL_<%= data.name %>> {
+ public:
+  static void Init(Napi::Env env, Napi::Object exports);
+
+  explicit NIDL_<%= data.name %>(const Napi::CallbackInfo& info);
+
+  <% for (let member of data.members) { %>
+    <% if (member.type === "attribute") { %>
+    Napi::Value Getter<%= filter.pascalCase(member.name) %>(const Napi::CallbackInfo& info);
+    void Setter<%= filter.pascalCase(member.name) %>(const Napi::CallbackInfo& info, const Napi::Value& value);
+    <% } else if (member.type === "operation") { %>
+    Napi::Value <%= member.name %>(const Napi::CallbackInfo& info);
+    <% } %>
+  <% } %>
+ private:
+  std::unique_ptr<<%= data.name %>> impl_;
+};
+
+#endif  // EXAMPLES_HELLO_NIDL_H_

@@ -1,0 +1,13 @@
+#include <napi.h>
+<% for (let name of interfaceNameList) { %>
+#include "nidl_<%= name.toLowerCase() %>.h"
+<% } %>
+
+Napi::Object Init(Napi::Env env, Napi::Object exports) {
+  <% for (let name of interfaceNameList) { %>
+  NIDL_<%= name %>::Init(env, exports);
+  <% } %>
+  return exports;
+}
+
+NODE_API_MODULE(nidl, Init);
