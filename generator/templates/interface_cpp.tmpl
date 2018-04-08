@@ -1,0 +1,52 @@
+#include "nidl_<%= data.name.toLowerCase() %>.h"
+
+void NIDL_<%= data.name %>::Init(Napi::Env env, Napi::Object exports) {
+  Napi::Function js_constructor = DefineClass(env, "<%= data.name %>", {
+    <% for (let member of data.members) { %>
+      <% if (member.type === "operation") { %>
+      InstanceMethod("<%= member.name %>", &NIDL_<%= data.name %>::<%= member.name %>),
+      <% } else if (member.type === "attribute") { %>
+      InstanceAccessor("<%= member.name %>", &NIDL_<%= data.name %>::Getter<%= filter.pascalCase(member.name) %>, &NIDL_<%= data.name %>::Setter<%= filter.pascalCase(member.name) %>),
+      <% } %>
+    <% } %>
+  });
+  exports.Set("<%= data.name %>", js_constructor);
+}
+
+NIDL_<%= data.name %>::NIDL_<%= data.name %>(const Napi::CallbackInfo& info)
+    : Napi::ObjectWrap<NIDL_<%= data.name %>>(info) {
+  impl_.reset(new <%= data.name %>());
+}
+
+<% for (let member of data.members) { %>
+<% if (member.type === "operation") { %>
+Napi::Value NIDL_<%= data.name %>::<%= member.name %>(const Napi::CallbackInfo& info) {
+  if (info.Length() != <%= member.arguments.length %>) {
+    Napi::RangeError::New(info.Env(), "Wrong number of arguments.")
+      .ThrowAsJavaScriptException();
+    return Napi::Value();
+  }
+
+  <% for (let index in member.arguments) { %>
+    auto <%= member.arguments[index].name %> = NativeTypeTraits<IDL<%= filter.pascalCase(member.arguments[index].idlType.idlType) %>>::NativeValue(info.Env(), info[<%= index %>]);
+  <% } %>
+
+
+  auto return_value = impl_-><%= member.name %>(
+    <% for (let index in member.arguments) { %>
+      <%= member.arguments[index].name %> <% if (index < member.arguments.length - 1) { %>,<% } %>
+    <% } %>
+  );
+
+  return JSTypeTraits(info.Env(), return_value);
+}
+<% } else if (member.type === "attribute") { %>
+Napi::Value NIDL_<%= data.name %>::Getter<%= filter.pascalCase(member.name) %>(const Napi::CallbackInfo& info) {
+  auto return_value = impl_->Get<%= filter.pascalCase(member.name) %>();
+  return JSTypeTraits(info.Env(), return_value);
+}
+void NIDL_<%= data.name %>::Setter<%= filter.pascalCase(member.name) %>(const Napi::CallbackInfo& info, const Napi::Value& value) {
+  impl_->Set<%= filter.pascalCase(member.name) %>(NativeTypeTraits<IDL<%= filter.pascalCase(member.idlType.idlType) %>>::NativeValue(info.Env(), info[0]));
+}
+<% } %>
+<% } %>
