@@ -9,7 +9,8 @@
         "<!@(node -p \"require('../').include\")"
       ],
       "sources": [
-        "hello.cc"
+        "hello.cc",
+        "<!@(node -p \"require('../').generate()\")"
       ]
     }
   ]

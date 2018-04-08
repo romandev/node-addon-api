@@ -38,5 +38,6 @@ module.exports = {
   }).join(' '),
   gyp: gyp,
   isNodeApiBuiltin: isNodeApiBuiltin,
-  needsFlag: needsFlag
+  needsFlag: needsFlag,
+  generate: require('./generator').main
 };
