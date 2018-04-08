@@ -11,10 +11,6 @@
       "sources": [
         "hello.cc",
         "hello.h",
-        "nidl.cc",
-        "nidl.h",
-        "nidl_hello.cc",
-        "nidl_hello.h",
         "<!@(node -p \"require('../').generate()\")"
       ]
     }

@@ -4,18 +4,18 @@
 #include <memory>
 #include <napi.h>
 
-#include "hello.h"
+#include "../<%= data.name.toLowerCase() %>.h"
 
-class NIDL_Hello : public Napi::ObjectWrap<NIDL_Hello> {
+class NIDL_<%= data.name %> : public Napi::ObjectWrap<NIDL_<%= data.name %>> {
  public:
   static void Init(Napi::Env env, Napi::Object exports);
 
-  explicit NIDL_Hello(const Napi::CallbackInfo& info);
+  explicit NIDL_<%= data.name %>(const Napi::CallbackInfo& info);
 
   Napi::Value GetterWorld(const Napi::CallbackInfo& info);
 
  private:
-  std::unique_ptr<Hello> impl_;
+  std::unique_ptr<<%= data.name %>> impl_;
 };
 
 #endif  // EXAMPLES_HELLO_NIDL_H_
