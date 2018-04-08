@@ -1,6 +1,6 @@
-#include "nidl.h"
-
-#include "nidl_hello.h"
+<% for (let name of nameList) { %>
+#include "../<%= name %>.h"
+<% } %>
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
   NIDL_Hello::Init(env, exports);
