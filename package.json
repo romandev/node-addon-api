@@ -39,8 +39,7 @@
     "url": "git://github.com/nodejs/node-addon-api.git"
   },
   "scripts": {
-    "pretest": "node-gyp rebuild -C test",
-    "test": "node test",
+    "test": "node-gyp rebuild -C examples && node -p \"require('node-addon-api').generate()\"",
     "doc": "doxygen doc/Doxyfile",
     "start": "node-gyp rebuild -C examples && node examples/hello.js"
   },
