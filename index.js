@@ -39,5 +39,8 @@ module.exports = {
   gyp: gyp,
   isNodeApiBuiltin: isNodeApiBuiltin,
   needsFlag: needsFlag,
-  generate: require('./generator').main
+  generate: () => {
+    require('./generator').main()
+    return '';
+  }
 };
