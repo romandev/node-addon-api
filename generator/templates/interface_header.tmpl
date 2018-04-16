@@ -12,8 +12,12 @@ class NIDL_<%= data.name %> : public Napi::ObjectWrap<NIDL_<%= data.name %>> {
 
   explicit NIDL_<%= data.name %>(const Napi::CallbackInfo& info);
 
-  Napi::Value GetterWorld(const Napi::CallbackInfo& info);
-
+  <% for (let member of data.members) { %>
+    <% if (member.type === "attribute") { %>
+    Napi::Value Getter<%= member.name %>(const Napi::CallbackInfo& info);
+    void Setter<%= member.name %>(const Napi::CallbackInfo& info, const Napi::Value& value);
+    <% } %>
+  <% } %>
  private:
   std::unique_ptr<<%= data.name %>> impl_;
 };
