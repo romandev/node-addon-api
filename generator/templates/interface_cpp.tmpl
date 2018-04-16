@@ -1,12 +1,13 @@
 #include "nidl_<%= data.name.toLowerCase() %>.h"
 
 void NIDL_<%= data.name %>::Init(Napi::Env env, Napi::Object exports) {
-  Napi::Function js_constructor =
-      DefineClass(env, "<%= data.name %>",
-          {
-            InstanceAccessor("world", &NIDL_<%= data.name %>::GetterWorld, nullptr),
-          });
-
+  Napi::Function js_constructor = DefineClass(env, "<%= data.name %>", {
+    <% for (let member of data.members) { %>
+      <% if (member.type === "attribute") { %>
+      InstanceAccessor("<%= member.name %>", &NIDL_<%= data.name %>::Getter<%= member.name %>, &NIDL_<%= data.name %>::Setter<%= member.name %>),
+      <% } %>
+    <% } %>
+  });
   exports.Set("<%= data.name %>", js_constructor);
 }
 
@@ -15,7 +16,16 @@ NIDL_Hello::NIDL_<%= data.name %>(const Napi::CallbackInfo& info)
   impl_.reset(new <%= data.name %>());
 }
 
-Napi::Value NIDL_<%= data.name %>::GetterWorld(const Napi::CallbackInfo& info) {
-  return Napi::String::New(info.Env(), impl_->getWorld());
-}
+<% for (let member of data.members) { %>
+  <% if (member.type === "attribute") {%>
+  Napi::Value NIDL_<%= data.name %>::Getter<%= member.name %>(const Napi::CallbackInfo& info) {
+    // TODO: implement type transit native to javascript
+    return Napi::String::New(info.Env(), impl_->getWorld());
+  }
+
+  void NIDL_<%= data.name %>::Setter<%= member.name %>(const Napi::CallbackInfo& info, const Napi::Value& value) {
+    // TODO: implement type transit javascript to native and then set value.
+  }
+  <% } %>
+<% } %>
 
