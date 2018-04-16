@@ -19,11 +19,12 @@ NIDL_Hello::NIDL_<%= data.name %>(const Napi::CallbackInfo& info)
 <% for (let member of data.members) { %>
   <% if (member.type === "attribute") {%>
   Napi::Value NIDL_<%= data.name %>::Getter<%= member.name %>(const Napi::CallbackInfo& info) {
+    // TODO: implement type transit native to javascript
     return Napi::String::New(info.Env(), impl_->getWorld());
   }
 
   void NIDL_<%= data.name %>::Setter<%= member.name %>(const Napi::CallbackInfo& info, const Napi::Value& value) {
-    // TODO: implement me
+    // TODO: implement type transit javascript to native and then set value.
   }
   <% } %>
 <% } %>
