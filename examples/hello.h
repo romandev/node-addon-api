@@ -5,7 +5,7 @@
 
 class Hello {
  public:
-  std::string getWorld() const;
+  std::string world() const;
 };
 
 #endif  // EXAMPLES_HELLO_H_

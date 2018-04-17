@@ -1,12 +1,16 @@
 #include "nidl_<%= data.name.toLowerCase() %>.h"
 
-void NIDL_<%= data.name %>::Init(Napi::Env env, Napi::Object exports) {
-  Napi::Function js_constructor =
-      DefineClass(env, "<%= data.name %>",
-          {
-            InstanceAccessor("world", &NIDL_<%= data.name %>::GetterWorld, nullptr),
-          });
+#include "../../generator/js_type_traits.h"
+#include "../../generator/native_type_traits.h"
 
+void NIDL_<%= data.name %>::Init(Napi::Env env, Napi::Object exports) {
+  Napi::Function js_constructor = DefineClass(env, "<%= data.name %>", {
+    <% for (let member of data.members) { %>
+      <% if (member.type === "operation") { %>
+      InstanceMethod("<%= member.name %>", &NIDL_<%= data.name %>::<%= member.name %>),
+      <% } %>
+    <% } %>
+  });
   exports.Set("<%= data.name %>", js_constructor);
 }
 
@@ -15,7 +19,25 @@ NIDL_Hello::NIDL_<%= data.name %>(const Napi::CallbackInfo& info)
   impl_.reset(new <%= data.name %>());
 }
 
-Napi::Value NIDL_<%= data.name %>::GetterWorld(const Napi::CallbackInfo& info) {
-  return Napi::String::New(info.Env(), impl_->getWorld());
-}
+<% for (let member of data.members) { %>
+  <% if (member.type === "operation") { %>
+  Napi::Value NIDL_<%= data.name %>::<%= member.name %>(const Napi::CallbackInfo& info) {
+    if (info.Length() != <%= member.arguments.length %>) {
+      Napi::RangeError::New(info.Env(), "Wrong number of arguments.")
+        .ThrowAsJavaScriptException();
+      return Napi::Value();
+    }
+    <% for (let [index, arg] of member.arguments) { %>
+      auto <%= arg.name %> = NativeTypeTraits<IDL<%= arg.type %>>::NativeValue(infor.Env(), info[index]);
+    <% } %>
+    
+    auto return_value = impl_-><%= member.name %>(
+      <% for (let [index, arg] of member.arguments) { %>
+        <%= arg.name %> <% if (index !== member.arguments.length - 1) { %>,<% } %>
+      <% } %>
+    );
+    return JSTypeTraits(info.Env(), return_value);
+  }
+  <% } %>
+<% } %>
 

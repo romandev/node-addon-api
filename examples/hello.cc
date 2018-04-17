@@ -1,5 +1,5 @@
 #include "hello.h"
 
-std::string Hello::getWorld() const {
-  return "world";
+std::string Hello::world() const {
+  return "hello, world!";
 }
