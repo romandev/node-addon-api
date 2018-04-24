@@ -8,6 +8,8 @@ void NIDL_<%= data.name %>::Init(Napi::Env env, Napi::Object exports) {
     <% for (let member of data.members) { %>
       <% if (member.type === "operation") { %>
       InstanceMethod("<%= member.name %>", &NIDL_<%= data.name %>::<%= member.name %>),
+      <% } else if (member.type === "attribute") { %>
+      InstanceAccessor("<%= member.name %>", &NIDL_<%= data.name %>::Getter<%= filter.pascalCase(member.name) %>, &NIDL_<%= data.name %>::Setter<%= filter.pascalCase(member.name) %>),
       <% } %>
     <% } %>
   });
@@ -28,7 +30,7 @@ NIDL_Hello::NIDL_<%= data.name %>(const Napi::CallbackInfo& info)
       return Napi::Value();
     }
     <% for (let [index, arg] of member.arguments) { %>
-      auto <%= arg.name %> = NativeTypeTraits<IDL<%= arg.type %>>::NativeValue(infor.Env(), info[index]);
+      auto <%= arg.name %> = NativeTypeTraits<IDL<%= filter.pascalCase(arg.type) %>>::NativeValue(infor.Env(), info[index]);
     <% } %>
     
     auto return_value = impl_-><%= member.name %>(
@@ -37,6 +39,14 @@ NIDL_Hello::NIDL_<%= data.name %>(const Napi::CallbackInfo& info)
       <% } %>
     );
     return JSTypeTraits(info.Env(), return_value);
+  }
+  <% } else if (member.type === "attribute") { %>
+  Napi::Value NIDL_<%= data.name %>::Getter<%= filter.pascalCase(member.name) %>(const Napi::CallbackInfo& info) {
+    auto return_value = impl_->Get<%= filter.pascalCase(member.name) %>();
+    return JSTypeTraits(info.Env(), return_value);
+  }
+  void NIDL_<%= data.name %>::Setter<%= filter.pascalCase(member.name) %>(const Napi::CallbackInfo& info, const Napi::Value& value) {
+    impl_->Set<%= filter.pascalCase(member.name) %>(NativeTypeTraits<IDL<%= filter.pascalCase(member.idlType.idlType) %>>::NativeValue(info.Env(), info[0]));
   }
   <% } %>
 <% } %>
