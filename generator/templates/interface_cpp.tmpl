@@ -1,8 +1,5 @@
 #include "nidl_<%= data.name.toLowerCase() %>.h"
 
-#include "../../generator/js_type_traits.h"
-#include "../../generator/native_type_traits.h"
-
 void NIDL_<%= data.name %>::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function js_constructor = DefineClass(env, "<%= data.name %>", {
     <% for (let member of data.members) { %>
