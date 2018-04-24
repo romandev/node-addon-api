@@ -5,8 +5,9 @@ async function read(path) {
     fs.readFile(path, 'utf8', (error, data) => {
       if (error) {
         reject(error);
+      } else {
+        resolve(data);
       }
-      resolve(data);
     });
   });
 }
@@ -16,8 +17,9 @@ async function write(path, data) {
     fs.writeFile(path, data, 'utf8', (error) => {
       if (error) {
         reject(error);
+      } else {
+        resolve();
       }
-      resolve();
     });
   });
 }
