@@ -1,7 +1,11 @@
 const file = require('./file');
 
-function snakeCase(camelCase) {
-  return camelCase.replace(/([|A-Z])/g, '_$1').toLowerCase();
+function camelCase(string) {
+  return string.replace(/([|A-Z])/g, '_$1');
+}
+
+function snakeCase(string) {
+  return string.replace(/([|A-Z])/g, '_$1').toLowerCase();
 }
 
 async function render(data) {
@@ -17,7 +21,8 @@ async function render(data) {
   const result = (new Function('data', `
     const tokens = [];
     const filter = {
-      snakeCase: ${snakeCase}
+      snakeCase: ${snakeCase},
+      camelCase: ${camelCase}
     };
     with (data) {
       tokens.push('${expansion}');
