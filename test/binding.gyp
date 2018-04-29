@@ -2,6 +2,7 @@
   'target_defaults': {
     'sources': [
         'arraybuffer.cc',
+        'asynccontext.cc',
         'asyncworker.cc',
         'basic_types/number.cc',
         'basic_types/value.cc',

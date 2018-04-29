@@ -1495,6 +1495,31 @@ namespace Napi {
     napi_escapable_handle_scope _scope;
   };
 
+  class AsyncContext {
+  public:
+    explicit AsyncContext(const char* resource_name, const Function& callback);
+    explicit AsyncContext(const char* resource_name,
+                 const Object& resource,
+                 const Function& callback);
+    virtual ~AsyncContext();
+
+    AsyncContext(AsyncContext&& other);
+    AsyncContext& operator =(AsyncContext&& other);
+    AsyncContext(const AsyncContext&) = delete;
+    AsyncContext& operator =(AsyncContext&) = delete;
+
+    Value MakeCallback() const;
+    Value MakeCallback(const Object& receiver) const;
+    Value MakeCallback(const std::initializer_list<napi_value>& args) const;
+    Value MakeCallback(const Object& receiver,
+                       const std::initializer_list<napi_value>& args) const;
+
+  private:
+    napi_env _env;
+    napi_async_context _context;
+    FunctionReference _callback;
+  };
+
   class AsyncWorker {
   public:
     virtual ~AsyncWorker();

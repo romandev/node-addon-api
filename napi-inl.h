@@ -3075,6 +3075,73 @@ inline Value EscapableHandleScope::Escape(napi_value escapee) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// AsyncContext class
+////////////////////////////////////////////////////////////////////////////////
+
+inline AsyncContext::AsyncContext(const char* resource_name,
+                                  const Function& callback)
+  : AsyncContext(resource_name, Object::New(callback.Env()), callback) {
+}
+
+inline AsyncContext::AsyncContext(const char* resource_name,
+                                  const Object& resource,
+                                  const Function& callback)
+  : _env(callback.Env()),
+    _context(nullptr),
+    _callback(Napi::Persistent(callback)) {
+  napi_value resource_id;
+  napi_status status = napi_create_string_utf8(
+      _env, resource_name, NAPI_AUTO_LENGTH, &resource_id);
+  NAPI_THROW_IF_FAILED(_env, status);
+
+  status = napi_async_init(_env, resource, resource_id, &_context);
+  NAPI_THROW_IF_FAILED(_env, status);
+}
+
+inline AsyncContext::~AsyncContext() {
+  if (_context != nullptr) {
+    napi_async_destroy(_env, _context);
+    _context = nullptr;
+  }
+}
+
+inline AsyncContext::AsyncContext(AsyncContext&& other) {
+  _env = other._env;
+  other._env = nullptr;
+  _context = other._context;
+  other._context = nullptr;
+  _callback = std::move(other._callback);
+}
+
+inline AsyncContext& AsyncContext::operator =(AsyncContext&& other) {
+  _env = other._env;
+  other._env = nullptr;
+  _context = other._context;
+  other._context = nullptr;
+  _callback = std::move(other._callback);
+  return *this;
+}
+
+inline Value AsyncContext::MakeCallback() const {
+  return MakeCallback(Object::New(_env));
+}
+
+inline Value AsyncContext::MakeCallback(const Object& receiver) const {
+  return _callback.MakeCallback(receiver, std::initializer_list<napi_value>{});
+}
+
+inline Value AsyncContext::MakeCallback(
+    const std::initializer_list<napi_value>& args) const {
+  return MakeCallback(Object::New(_env), args);
+}
+ 
+inline Value AsyncContext::MakeCallback(
+    const Object& receiver,
+    const std::initializer_list<napi_value>& args) const {
+  return _callback.MakeCallback(receiver, args);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // AsyncWorker class
 ////////////////////////////////////////////////////////////////////////////////
 
