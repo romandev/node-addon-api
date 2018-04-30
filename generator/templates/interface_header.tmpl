@@ -6,8 +6,8 @@
 
 #include "../<%= data.name.toLowerCase() %>.h"
 
-#include "js_type_traits.h"
-#include "native_type_traits.h"
+#include <generator/types/js_type_traits.h>
+#include <generator/types/native_type_traits.h>
 
 class NIDL_<%= data.name %> : public Napi::ObjectWrap<NIDL_<%= data.name %>> {
  public:

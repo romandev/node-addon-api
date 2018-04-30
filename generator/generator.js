@@ -24,7 +24,6 @@ async function generateInterface(ast) {
   const outputFiles = [];
 
   for (let syntax of ast) {
-    console.log(syntax)
     if (syntax.type === 'interface') {
       await template.render({
         input: `${__dirname}/templates/interface_cpp.tmpl`,
