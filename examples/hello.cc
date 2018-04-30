@@ -1,5 +1,10 @@
 #include "hello.h"
 
-std::string Hello::getWorld() const {
-  return "world";
+const std::string Hello::GetWorld() {
+  return world;
 }
+
+void Hello::SetWorld(const std::string world) {
+  Hello::world = world;
+}
+
