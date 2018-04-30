@@ -20,8 +20,8 @@
 #include <napi.h>
 #include <string>
 #include <type_traits>
-#include "idl_base.h"
-#include "idl_types.h"
+#include <generator/types/idl_base.h>
+#include <generator/types/idl_types.h>
 
 template <typename T, typename SFINAEHelper = void>
 struct NativeTypeTraitsBase {
