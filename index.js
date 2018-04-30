@@ -22,7 +22,7 @@ var isNodeApiBuiltin =
 // incarnation of the built-in API.
 var needsFlag = (!isNodeApiBuiltin && versionArray[0] == 8);
 
-var include = [__dirname];
+var include = [__dirname, path.join(__dirname, 'generator', 'core', 'types')];
 var gyp = path.join(__dirname, 'src', 'node_api.gyp');
 
 if (isNodeApiBuiltin) {
