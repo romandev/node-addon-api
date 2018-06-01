@@ -39,7 +39,7 @@
     "url": "git://github.com/nodejs/node-addon-api.git"
   },
   "scripts": {
-    "test": "node -p \"require('node-addon-api').generate()\"",
+    "test": "cd examples && node -p \"require('node-addon-api').generate()\"",
     "doc": "doxygen doc/Doxyfile",
     "start": "node-gyp rebuild -C examples && node examples/hello.js"
   },
