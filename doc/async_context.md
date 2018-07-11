@@ -131,112 +131,30 @@ Returns an AsyncContext instance which can later make the given callback by
 
 ### Constructor
 
-Creates a new `AsyncWorker`.
+Creates a new `AsyncContext`.
 
 ```cpp
-explicit AsyncWorker(const Function& callback, const char* resource_name);
+explicit AsyncContext(const char* resource_name, const Function& callback);
 ```
 
-- `[in] callback`: The function which will be called when an asynchronous
-operations ends. The given function is called from the main event loop thread.
 - `[in] resource_name`: Null-terminated strings that represents the
 identifier for the kind of resource that is being provided for diagnostic
 information exposed by the async_hooks API.
-
-Returns an AsyncWork instance which can later be queued for execution by calling
-`Queue`.
-
-
-### Constructor
-
-Creates a new `AsyncWorker`.
-
-```cpp
-explicit AsyncWorker(const Function& callback, const char* resource_name, const Object& resource);
-```
-
-- `[in] callback`: The function which will be called when an asynchronous
-operations ends. The given function is called from the main event loop thread.
-- `[in] resource_name`:  Null-terminated strings that represents the
-identifier for the kind of resource that is being provided for diagnostic
-information exposed by the async_hooks API.
 - `[in] resource`: Object associated with the asynchronous operation that
 will be passed to possible async_hooks.
-
-Returns an AsyncWork instance which can later be queued for execution by calling
-`Queue`.
-
-### Constructor
-
-Creates a new `AsyncWorker`.
-
-```cpp
-explicit AsyncWorker(const Object& receiver, const Function& callback);
-```
-
-- `[in] receiver`: The `this` object passed to the called function.
 - `[in] callback`: The function which will be called when an asynchronous
-operations ends. The given function is called from the main event loop thread.
+operations ends.
 
-Returns an AsyncWork instance which can later be queued for execution by calling
-`Queue`.
-
-
-### Constructor
-
-Creates a new `AsyncWorker`.
-
-```cpp
-explicit AsyncWorker(const Object& receiver, const Function& callback,const char* resource_name);
-```
-
-- `[in] receiver`: The `this` object passed to the called function.
-- `[in] callback`: The function which will be called when an asynchronous
-operations ends. The given function is called from the main event loop thread.
-- `[in] resource_name`:  Null-terminated strings that represents the
-identifier for the kind of resource that is being provided for diagnostic
-information exposed by the async_hooks API.
-
-Returns an AsyncWork instance which can later be queued for execution by calling
-`Queue`.
-
-
-### Constructor
-
-Creates a new `AsyncWorker`.
-
-```cpp
-explicit AsyncWorker(const Object& receiver, const Function& callback, const char* resource_name, const Object& resource);
-```
-
-- `[in] receiver`: The `this` object passed to the called function.
-- `[in] callback`: The function which will be called when an asynchronous
-operations ends. The given function is called from the main event loop thread.
-- `[in] resource_name`:  Null-terminated strings that represents the
-identifier for the kind of resource that is being provided for diagnostic
-information exposed by the async_hooks API.
-- `[in] resource`: Object associated with the asynchronous operation that
-will be passed to possible async_hooks.
-
-Returns an AsyncWork instance which can later be queued for execution by calling
-`Queue`.
+Returns an AsyncContext instance which can later make the given callback by
+`MakeCallback()` method.
 
 ### Destructor
 
-Deletes the created work object that is used to execute logic asynchronously.
+The async context to be destroyed.
 
 ```cpp
-virtual ~AsyncWorker();
+virtual ~AsyncContext();
 ```
-
-## Operator
-
-```cpp
-operator napi_async_work() const;
-```
-
-Returns the N-API napi_async_work wrapped by the AsyncWorker object. This can be
-used to mix usage of the C N-API and node-addon-api.
 
 ## Example
 
