@@ -1,6 +1,6 @@
 # AsyncContext
 
-The `AsyncWorker` class may not be appropriate for every scenario, because with those the async execution still happens on the main event loop. When using any other async mechanism, introducing a new class `AsyncContext` is necessary to ensure an async operation is properly tracked by the runtime. The class provides `MakeCallback()` method to properly restore the correct async execution context.
+The `AsyncWorker` class may not be appropriate for every scenario, because with those the async execution still happens on the main event loop. When using any other async mechanism, introducing a new class `AsyncContext` is necessary to ensure an async operation is properly tracked by the runtime. The `AsyncContext` class provides `MakeCallback()` method to properly restore the correct async execution context.
 
 ## Methods
 
