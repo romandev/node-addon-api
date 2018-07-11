@@ -35,6 +35,8 @@ returning from an async operation (when there is no other script on the stack).
 Value MakeCallback(const Object& receiver) const
 ```
 
+- `[in] receiver`: The `this` object passed to the callback.
+
 Returns a `Value` representing the JavaScript object returned.
 
 ### MakeCallback
@@ -46,6 +48,8 @@ returning from an async operation (when there is no other script on the stack).
 Value MakeCallback(const std::initializer_list<napi_value>& args) const
 ```
 
+- `[in] args`: Initializer list of JavaScript values as `napi_value` representing the arguments to the callback.
+
 Returns a `Value` representing the JavaScript object returned.
 
 ### MakeCallback
@@ -56,6 +60,9 @@ returning from an async operation (when there is no other script on the stack).
 ```cpp
 Value MakeCallback(const Object& receiver, const std::initializer_list<napi_value>& args) const
 ```
+
+- `[in] receiver`: The `this` object passed to the callback.
+- `[in] args`: Initializer list of JavaScript values as `napi_value` representing the arguments to the callback.
 
 Returns a `Value` representing the JavaScript object returned.
 
