@@ -134,7 +134,7 @@ Returns an AsyncContext instance which can later make the given callback by
 Creates a new `AsyncContext`.
 
 ```cpp
-explicit AsyncContext(const char* resource_name, const Function& callback);
+explicit AsyncContext(const char* resource_name, const Object& resource, const Function& callback);
 ```
 
 - `[in] resource_name`: Null-terminated strings that represents the
